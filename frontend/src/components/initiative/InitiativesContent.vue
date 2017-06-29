@@ -28,20 +28,25 @@
         </div>
 
         <div class="section-tabs w3-row w3-center">
-          <router-link tag="div" to="overview" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="overview" class="w3-col s3 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isOverview, 'w3-theme-l3': isOverview}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isOverview}">Overview</h5>
           </router-link>
-          <router-link tag="div" to="people" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="people" class="w3-col s3 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isPeople, 'w3-theme-l3': isPeople}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isPeople}">People</h5>
           </router-link>
-          <router-link tag="div" to="assignations" class="w3-col s4 tablink w3-bottombar w3-hover-light-grey w3-padding"
+          <router-link tag="div" to="assignations" class="w3-col s3 tablink w3-bottombar w3-hover-light-grey w3-padding"
             :class="{'w3-border-blue': isAssignations, 'w3-theme-l3': isAssignations}"
             @click="">
             <h5 class="d2-color noselect" :class="{'bold-text': isAssignations}">Transfers</h5>
+          </router-link>
+          <router-link tag="div" to="tasks" class="w3-col s3 tablink w3-bottombar w3-hover-light-grey w3-padding"
+            :class="{'w3-border-blue': isTasks, 'w3-theme-l3': isTasks}"
+            @click="">
+            <h5 class="d2-color noselect" :class="{'bold-text': isTasks}">Tasks</h5>
           </router-link>
         </div>
 
@@ -101,6 +106,15 @@ export default {
       var res = false
       this.$route.matched.forEach((e) => {
         if (e.name === 'InitiativeAssignations') {
+          res = true
+        }
+      })
+      return res
+    },
+    isTasks () {
+      var res = false
+      this.$route.matched.forEach((e) => {
+        if (e.name === 'InitiativeTasks') {
           res = true
         }
       })

@@ -7,6 +7,7 @@ import InitiativesContent from '../components/initiative/InitiativesContent.vue'
 import InitiativeOverview from '../components/initiative/InitiativeOverview.vue'
 import InitiativePeople from '../components/initiative/InitiativePeople.vue'
 import InitiativeAssignations from '../components/initiative/InitiativeAssignations.vue'
+import TasksBoard from '../components/initiative/tasksBoard/Board.vue'
 
 Vue.use(Router)
 
@@ -23,7 +24,8 @@ export default new Router({
           children: [
             { path: 'overview', name: 'InitiativeOverview', component: InitiativeOverview, meta: {'column': 0} },
             { path: 'people', name: 'InitiativePeople', component: InitiativePeople, meta: {'column': 1} },
-            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations, meta: {'column': 3} }
+            { path: 'assignations', name: 'InitiativeAssignations', component: InitiativeAssignations, meta: {'column': 3} },
+            { path: 'tasks', name: 'InitiativeTasks', component: TasksBoard, meta: {'column': 4} }
           ]}
       ]
     }
