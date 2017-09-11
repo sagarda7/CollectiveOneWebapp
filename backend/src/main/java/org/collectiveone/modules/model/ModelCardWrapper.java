@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.comments.CommentsThread;
 import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.hibernate.annotations.GenericGenerator;
@@ -46,6 +47,9 @@ public class ModelCardWrapper {
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ModelCard> oldVersions = new ArrayList<ModelCard>();
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	private CommentsThread commentsThread;
 	
 	@Override
 	public int hashCode() {
@@ -133,6 +137,14 @@ public class ModelCardWrapper {
 
 	public void setTargetDate(Timestamp targetDate) {
 		this.targetDate = targetDate;
+	}
+
+	public CommentsThread getCommentsThread() {
+		return commentsThread;
+	}
+
+	public void setCommentsThread(CommentsThread commentsThread) {
+		this.commentsThread = commentsThread;
 	}
 	
 	

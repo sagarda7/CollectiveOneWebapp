@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.collectiveone.modules.comments.Comments;
+import org.collectiveone.modules.comments.CommentsThread;
 import org.collectiveone.modules.governance.Governance;
 import org.collectiveone.modules.model.ModelView;
 import org.collectiveone.modules.tokens.TokenType;
@@ -63,6 +65,9 @@ public class Initiative {
 	
 	@OneToMany(mappedBy = "initiative")
 	private List<ModelView> modelViews = new ArrayList<ModelView>();
+	
+	@OneToMany(mappedBy = "initiative")
+	private Set<CommentsThread> commentsThreads = new LinkedHashSet<CommentsThread>();
 	
 	
 	public InitiativeDto toDto() {
@@ -132,6 +137,16 @@ public class Initiative {
 	}
 	public void setModelViews(List<ModelView> modelViews) {
 		this.modelViews = modelViews;
+	}
+
+
+	public Set<CommentsThread> getCommentsThreads() {
+		return commentsThreads;
+	}
+
+
+	public void setCommentsThreads(Set<CommentsThread> commentsThreads) {
+		this.commentsThreads = commentsThreads;
 	}
 	
 }
