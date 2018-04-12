@@ -35,6 +35,8 @@ public class ModelSection {
 	@ManyToOne
 	private Initiative initiative;
 	
+	private Boolean isTopModelSection;
+	
 	@Column(name = "title", length = 30)
 	private String title;
 	
@@ -97,6 +99,26 @@ public class ModelSection {
 		
 		return sectionDto;
 	}
+	
+	public ModelSectionDto toDtoLight () {
+		ModelSectionDto sectionDto = new ModelSectionDto();
+		
+		sectionDto.setId(id.toString());
+		sectionDto.setTitle(title);
+		sectionDto.setDescription(description);
+		sectionDto.setIsTopModelSection(isTopModelSection);
+		
+		return sectionDto; 
+	}
+	
+	public Boolean getIsTopModelSection() {
+		return isTopModelSection;
+	}
+
+	public void setIsTopModelSection(Boolean isTopModelSection) {
+		this.isTopModelSection = isTopModelSection;
+	}
+	
 	
 	public UUID getId() {
 		return id;

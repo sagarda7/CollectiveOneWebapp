@@ -18,6 +18,7 @@ public class ModelSectionDto {
 	private Boolean subElementsLoaded;
 	private Integer nSubsections;
 	private Integer nCards;
+	private Boolean isTopModelSection;
 	
 	private List<ModelCardWrapperDto> cardsWrappers = new ArrayList<ModelCardWrapperDto>();
 	private List<ModelSectionDto> subsections = new ArrayList<ModelSectionDto>();
@@ -127,5 +128,11 @@ public class ModelSectionDto {
 		this.inViews = inViews;
 	}
 	
+	public Boolean getIsTopModelSection() {
+		return isTopModelSection;
+	}
+	public void setIsTopModelSection(Boolean isTopModelSection) {
+		this.isTopModelSection = isTopModelSection;
+	}
 	
 }

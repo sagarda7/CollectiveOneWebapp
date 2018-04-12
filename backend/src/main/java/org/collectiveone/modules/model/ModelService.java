@@ -28,6 +28,7 @@ import org.collectiveone.modules.model.dto.ModelCardDto;
 import org.collectiveone.modules.model.dto.ModelCardWrapperDto;
 import org.collectiveone.modules.model.dto.ModelDto;
 import org.collectiveone.modules.model.dto.ModelSectionDto;
+import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
 import org.collectiveone.modules.model.dto.ModelViewDto;
 import org.collectiveone.modules.model.repositories.ModelCardRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
@@ -1080,6 +1081,39 @@ public class ModelService {
 	@Transactional
 	public GetResult<Integer> countCardLikes (UUID cardWrapperId) {
 		return new GetResult<Integer>("success", "cards counted", cardLikeRepository.countOfCard(cardWrapperId));
+	}
+	
+	
+	@Transactional
+	public GetResult<ModelSectionGenealogyDto> getSectionParentGenealogy(UUID sectionId) {
+		readIds.clear();
+		return new GetResult<ModelSectionGenealogyDto>("success", "parents retrieved", getSectionParentGenealogyRec(sectionId));
+	}
+	
+	@Transactional
+	public ModelSectionGenealogyDto getSectionParentGenealogyRec(UUID sectionId) {
+		
+		ModelSectionGenealogyDto genealogy = new ModelSectionGenealogyDto();
+		//System.out.println("section id "+modelSectionRepository.findById(sectionId));
+		genealogy.setSection(modelSectionRepository.findById(sectionId).toDtoLight());
+		
+		readIds.add(sectionId);
+		
+		List<ModelSection> inSections = modelSectionRepository.findParentSections(sectionId);
+		
+		for (ModelSection inSection : inSections) {
+			if (!readIds.contains(inSection.getId())) {
+				readIds.add(inSection.getId());
+				genealogy.getParents().add(getSectionParentGenealogyRec(inSection.getId()));	
+			} else {
+				/* if section already added, add it but don't keep looking recursively */
+				ModelSectionGenealogyDto repeatedGenealogy = new ModelSectionGenealogyDto();
+				repeatedGenealogy.setSection(inSection.toDtoLight());
+				genealogy.getParents().add(repeatedGenealogy);
+			}
+		}
+		
+		return genealogy;
 	}
 	
 }

@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.activity.dto.NotificationDto;
 import org.collectiveone.modules.activity.dto.SubscriberDto;
 import org.collectiveone.modules.activity.enums.ActivityType;
@@ -32,7 +33,9 @@ import org.collectiveone.modules.initiatives.Member;
 import org.collectiveone.modules.initiatives.repositories.InitiativeRepositoryIf;
 import org.collectiveone.modules.model.ModelCardWrapper;
 import org.collectiveone.modules.model.ModelSection;
+import org.collectiveone.modules.model.ModelService;
 import org.collectiveone.modules.model.ModelView;
+import org.collectiveone.modules.model.dto.ModelSectionGenealogyDto;
 import org.collectiveone.modules.model.repositories.ModelCardWrapperRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelSectionRepositoryIf;
 import org.collectiveone.modules.model.repositories.ModelViewRepositoryIf;
@@ -42,7 +45,9 @@ import org.collectiveone.modules.tokens.TokenType;
 import org.collectiveone.modules.users.AppUser;
 import org.collectiveone.modules.users.AppUserRepositoryIf;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,6 +61,12 @@ public class ActivityService {
 	
 	@Autowired
 	private MessageService messageService;
+	
+	@Autowired
+	private ModelService modelService;
+	
+	@Autowired
+	SimpMessagingTemplate template;
 	
 	
 	@Autowired
@@ -868,6 +879,33 @@ public class ActivityService {
 			}
 		}
 		return -1;
+	}
+	
+	
+	public List<UUID> getSectionParentGenealogyIds(UUID sectionId) {
+	    ModelSectionGenealogyDto genealogy = modelService.getSectionParentGenealogyRec(sectionId);
+	    return extractAllIdsSectionsTree(genealogy, new ArrayList<UUID>());
+	}
+	
+	private List<UUID> extractAllIdsSectionsTree(ModelSectionGenealogyDto genealogy, List<UUID> list) {
+	            
+	    list.add(UUID.fromString(genealogy.getSection().getId()));
+	    
+	    for (ModelSectionGenealogyDto parentGenealogy : genealogy.getParents()) {
+	        extractAllIdsSectionsTree(parentGenealogy, list);
+	    }
+	    
+	    return list;
+	}
+	
+	public void broadcastMessage ( UUID elementId) {
+	    List<UUID> allParentSections = getSectionParentGenealogyIds(elementId); 
+	    
+	    for (UUID id : allParentSections) {
+	    		GetResult<Page<ActivityDto>> activities= modelService.getActivityResultUnderCard(id, new PageRequest(0, 10), false);
+	        template.convertAndSend("/topic/messages/" + id, activities);
+	    		System.out.println(id);
+	    }
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.collectiveone.common.BaseController;
 import org.collectiveone.common.dto.GetResult;
 import org.collectiveone.common.dto.PostResult;
+import org.collectiveone.modules.activity.ActivityService;
 import org.collectiveone.modules.activity.dto.ActivityDto;
 import org.collectiveone.modules.initiatives.InitiativeService;
 import org.collectiveone.modules.model.ModelController;
@@ -30,6 +31,9 @@ public class MessagesController extends BaseController {
 	
 	@Autowired
 	SimpMessagingTemplate template;
+	
+	@Autowired
+	ActivityService activityService;
 	
 	@Autowired
 	ModelController modelController;
@@ -58,8 +62,10 @@ public class MessagesController extends BaseController {
 		PostResult result= messageService.postMessage(messageDto, getLoggedUserId(), contextType, elementId);
 		/* now get results */
 		GetResult<Page<ActivityDto>> activities= modelController.getActivityUnderCard(contextElementIdStr, 0, 10, false);
-		
+//		
 		template.convertAndSend("/topic/messages/"+contextElementIdStr, activities);
+//		template.convertAndSend("/topic/messages/polling", contextElementIdStr);
+		// activityService.broadcastMessage(UUID.fromString(contextElementIdStr));
 		
 		return result;
 	}

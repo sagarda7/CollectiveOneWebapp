@@ -213,6 +213,13 @@ export default {
 
             this.remapActivities(response)
           })
+
+          this.stompClient.subscribe('/topic/messages/polling', tick => {
+            var context = tick.body
+            if (context !== this.contextElementId) {
+              this.getActivity('UPDATE')
+            }
+          })
         },
         error => {
           console.log(error)
